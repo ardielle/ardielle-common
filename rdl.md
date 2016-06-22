@@ -25,16 +25,29 @@ All names need to be of this restricted string type
 | pattern | `"[a-zA-Z_]+[a-zA-Z_0-9]*`" |       |
 
 
+### NamespacedIdentifier
+
+A Namespace is a dotted compound name, using reverse domain name order (i.e.
+"com.yahoo.auth")
+
+`NamespacedIdentifier` is a `String` type with the following options:
+
+| Option  | Value                                                    | Notes |
+|---------|----------------------------------------------------------|-------|
+| pattern | `"([a-zA-Z_]+[a-zA-Z_0-9]*)(\.[a-zA-Z_]+[a-zA-Z_0-9])*`" |       |
+
+
 ### TypeName
 
 The identifier for an already-defined type
 
-`TypeName` is a `String` type with the following options:
+`TypeName` is an alias of type `Identifier`
 
-| Option  | Value                       | Notes                            |
-|---------|-----------------------------|----------------------------------|
-| pattern | `"[a-zA-Z_]+[a-zA-Z_0-9]*`" | [from [Identifier](#identifier)] |
+### TypeRef
 
+A type reference can be a simple name, or also a namespaced name.
+
+`TypeRef` is an alias of type `NamespacedIdentifier`
 
 ### BaseType
 `BaseType` is an `Enum` of the following values:
@@ -82,7 +95,7 @@ TypeDef is the basic type definition.
 
 | Name        | Type                                                        | Options  | Description                                                                    | Notes |
 |-------------|-------------------------------------------------------------|----------|--------------------------------------------------------------------------------|-------|
-| type        | [TypeName](#typename)                                       |          | The type this type is derived from. For base types, it is the same as the name |       |
+| type        | [TypeRef](#typeref)                                         |          | The type this type is derived from. For base types, it is the same as the name |       |
 | name        | [TypeName](#typename)                                       |          | The name of the type                                                           |       |
 | comment     | String                                                      | optional | The comment for the type                                                       |       |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_"                                      |       |
@@ -97,7 +110,7 @@ and thus just create an alias
 
 | Name        | Type                                                        | Options  | Description                                                                    | Notes                      |
 |-------------|-------------------------------------------------------------|----------|--------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |          | The name of the type                                                           | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional | The comment for the type                                                       | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_"                                      | [from [TypeDef](#typedef)] |
@@ -111,7 +124,7 @@ Bytes allow the restriction by fixed size, or min/max size.
 
 | Name        | Type                                                        | Options  | Description                                                                    | Notes                      |
 |-------------|-------------------------------------------------------------|----------|--------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |          | The name of the type                                                           | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional | The comment for the type                                                       | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_"                                      | [from [TypeDef](#typedef)] |
@@ -129,7 +142,7 @@ set of values. An optional maximum size may be asserted
 
 | Name        | Type                                                        | Options  | Description                                                                    | Notes                      |
 |-------------|-------------------------------------------------------------|----------|--------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |          | The name of the type                                                           | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional | The comment for the type                                                       | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_"                                      | [from [TypeDef](#typedef)] |
@@ -163,7 +176,7 @@ A number type definition allows the restriction of numeric values.
 
 | Name        | Type                                                        | Options  | Description                                                                    | Notes                      |
 |-------------|-------------------------------------------------------------|----------|--------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |          | The name of the type                                                           | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional | The comment for the type                                                       | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_"                                      | [from [TypeDef](#typedef)] |
@@ -179,11 +192,11 @@ Array types can be restricted by item type and size
 
 | Name        | Type                                                        | Options     | Description                                                                    | Notes                      |
 |-------------|-------------------------------------------------------------|-------------|--------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |             | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |             | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |             | The name of the type                                                           | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional    | The comment for the type                                                       | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional    | additional annotations starting with "x_"                                      | [from [TypeDef](#typedef)] |
-| items       | [TypeName](#typename)                                       | default=Any | The type of the items, default to any type                                     |                            |
+| items       | [TypeRef](#typeref)                                         | default=Any | The type of the items, default to any type                                     |                            |
 | size        | Int32                                                       | optional    | If present, indicate the fixed size.                                           |                            |
 | minSize     | Int32                                                       | optional    | If present, indicate the min size                                              |                            |
 | maxSize     | Int32                                                       | optional    | If present, indicate the max size                                              |                            |
@@ -197,12 +210,12 @@ Map types can be restricted by key type, item type and size
 
 | Name        | Type                                                        | Options        | Description                                                                    | Notes                      |
 |-------------|-------------------------------------------------------------|----------------|--------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |                | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |                | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |                | The name of the type                                                           | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional       | The comment for the type                                                       | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional       | additional annotations starting with "x_"                                      | [from [TypeDef](#typedef)] |
-| keys        | [TypeName](#typename)                                       | default=String | The type of the keys, default to String.                                       |                            |
-| items       | [TypeName](#typename)                                       | default=Any    | The type of the items, default to Any type                                     |                            |
+| keys        | [TypeRef](#typeref)                                         | default=String | The type of the keys, default to String.                                       |                            |
+| items       | [TypeRef](#typeref)                                         | default=Any    | The type of the items, default to Any type                                     |                            |
 | size        | Int32                                                       | optional       | If present, indicates the fixed size.                                          |                            |
 | minSize     | Int32                                                       | optional       | If present, indicate the min size                                              |                            |
 | maxSize     | Int32                                                       | optional       | If present, indicate the max size                                              |                            |
@@ -217,26 +230,26 @@ Each field in a struct_field_spec is defined by this type
 | Name        | Type                                                        | Options       | Description                                               | Notes |
 |-------------|-------------------------------------------------------------|---------------|-----------------------------------------------------------|-------|
 | name        | [Identifier](#identifier)                                   |               | The name of the field                                     |       |
-| type        | [TypeName](#typename)                                       |               | The type of the field                                     |       |
+| type        | [TypeRef](#typeref)                                         |               | The type of the field                                     |       |
 | optional    | Bool                                                        | default=false | The field may be omitted even if specified                |       |
 | default     | Any                                                         | optional      | If field is absent, what default value should be assumed. |       |
 | comment     | String                                                      | optional      | The comment for the field                                 |       |
-| items       | [TypeName](#typename)                                       | optional      | For map or array fields, the type of the items            |       |
-| keys        | [TypeName](#typename)                                       | optional      | For map type fields, the type of the keys                 |       |
+| items       | [TypeRef](#typeref)                                         | optional      | For map or array fields, the type of the items            |       |
+| keys        | [TypeRef](#typeref)                                         | optional      | For map type fields, the type of the keys                 |       |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional      | additional annotations starting with "x_"                 |       |
 
 
 ### StructTypeDef
 
 A struct can restrict specific named fields to specific types. By default, any
-field not specified is allowed, and can be of any type. specifying closed
+field not specified is allowed, and can be of any type. Specifying closed
 means only those fields explicitly
 
 `StructTypeDef` is a `Struct` type with the following fields:
 
 | Name        | Type                                                        | Options       | Description                                                                                  | Notes                      |
 |-------------|-------------------------------------------------------------|---------------|----------------------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |               | The type this type is derived from. For base types, it is the same as the name               | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |               | The type this type is derived from. For base types, it is the same as the name               | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |               | The name of the type                                                                         | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional      | The comment for the type                                                                     | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional      | additional annotations starting with "x_"                                                    | [from [TypeDef](#typedef)] |
@@ -265,7 +278,7 @@ identifier.
 
 | Name        | Type                                                        | Options  | Description                                                                    | Notes                      |
 |-------------|-------------------------------------------------------------|----------|--------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |          | The type this type is derived from. For base types, it is the same as the name | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |          | The name of the type                                                           | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional | The comment for the type                                                       | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_"                                      | [from [TypeDef](#typedef)] |
@@ -280,11 +293,11 @@ Define a type as one of any other specified type.
 
 | Name        | Type                                                        | Options  | Description                                                                        | Notes                      |
 |-------------|-------------------------------------------------------------|----------|------------------------------------------------------------------------------------|----------------------------|
-| type        | [TypeName](#typename)                                       |          | The type this type is derived from. For base types, it is the same as the name     | [from [TypeDef](#typedef)] |
+| type        | [TypeRef](#typeref)                                         |          | The type this type is derived from. For base types, it is the same as the name     | [from [TypeDef](#typedef)] |
 | name        | [TypeName](#typename)                                       |          | The name of the type                                                               | [from [TypeDef](#typedef)] |
 | comment     | String                                                      | optional | The comment for the type                                                           | [from [TypeDef](#typedef)] |
 | annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_"                                          | [from [TypeDef](#typedef)] |
-| variants    | Array&lt;[TypeName](#typename)&gt;                          |          | The type names of constituent types. Union types get expanded, this is a flat list |                            |
+| variants    | Array&lt;[TypeRef](#typeref)&gt;                            |          | The type names of constituent types. Union types get expanded, this is a flat list |                            |
 
 
 ### Type
@@ -314,19 +327,20 @@ ResourceOutput defines input characteristics of a Resource
 
 `ResourceInput` is a `Struct` type with the following fields:
 
-| Name       | Type                      | Options       | Description                                                                        | Notes |
-|------------|---------------------------|---------------|------------------------------------------------------------------------------------|-------|
-| name       | [Identifier](#identifier) |               | the formal name of the input                                                       |       |
-| type       | [TypeName](#typename)     |               | The type of the input                                                              |       |
-| comment    | String                    | optional      | The optional comment                                                               |       |
-| pathParam  | Bool                      | default=false | true of this input is a path parameter                                             |       |
-| queryParam | String                    | optional      | if present, the name of the query param name                                       |       |
-| header     | String                    | optional      | If present, the name of the header the input is associated with                    |       |
-| pattern    | String                    | optional      | If present, the pattern associated with the pathParam (i.e. wildcard path matches) |       |
-| default    | Any                       | optional      | If present, the default value for optional params                                  |       |
-| optional   | Bool                      | default=false | If present, indicates that the input is optional                                   |       |
-| flag       | Bool                      | default=false | If present, indicates the queryparam is of flag style (no value)                   |       |
-| context    | String                    | optional      | If present, indicates the parameter comes form the implementation context          |       |
+| Name        | Type                                                        | Options       | Description                                                                        | Notes |
+|-------------|-------------------------------------------------------------|---------------|------------------------------------------------------------------------------------|-------|
+| name        | [Identifier](#identifier)                                   |               | the formal name of the input                                                       |       |
+| type        | [TypeRef](#typeref)                                         |               | The type of the input                                                              |       |
+| comment     | String                                                      | optional      | The optional comment                                                               |       |
+| pathParam   | Bool                                                        | default=false | true of this input is a path parameter                                             |       |
+| queryParam  | String                                                      | optional      | if present, the name of the query param name                                       |       |
+| header      | String                                                      | optional      | If present, the name of the header the input is associated with                    |       |
+| pattern     | String                                                      | optional      | If present, the pattern associated with the pathParam (i.e. wildcard path matches) |       |
+| default     | Any                                                         | optional      | If present, the default value for optional params                                  |       |
+| optional    | Bool                                                        | default=false | If present, indicates that the input is optional                                   |       |
+| flag        | Bool                                                        | default=false | If present, indicates the queryparam is of flag style (no value)                   |       |
+| context     | String                                                      | optional      | If present, indicates the parameter comes form the implementation context          |       |
+| annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional      | additional annotations starting with "x_"                                          |       |
 
 
 ### ResourceOutput
@@ -335,13 +349,14 @@ ResourceOutput defines output characteristics of a Resource
 
 `ResourceOutput` is a `Struct` type with the following fields:
 
-| Name     | Type                      | Options       | Description                                                            | Notes |
-|----------|---------------------------|---------------|------------------------------------------------------------------------|-------|
-| name     | [Identifier](#identifier) |               | the formal name of the output                                          |       |
-| type     | [TypeName](#typename)     |               | The type of the output                                                 |       |
-| header   | String                    |               | the name of the header associated with this output                     |       |
-| comment  | String                    | optional      | The optional comment for the output                                    |       |
-| optional | Bool                      | default=false | If present, indicates that the output is optional (the server decides) |       |
+| Name        | Type                                                        | Options       | Description                                                            | Notes |
+|-------------|-------------------------------------------------------------|---------------|------------------------------------------------------------------------|-------|
+| name        | [Identifier](#identifier)                                   |               | the formal name of the output                                          |       |
+| type        | [TypeRef](#typeref)                                         |               | The type of the output                                                 |       |
+| header      | String                                                      |               | the name of the header associated with this output                     |       |
+| comment     | String                                                      | optional      | The optional comment for the output                                    |       |
+| optional    | Bool                                                        | default=false | If present, indicates that the output is optional (the server decides) |       |
+| annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional      | additional annotations starting with "x_"                              |       |
 
 
 ### ResourceAuth
@@ -378,74 +393,35 @@ A Resource of a REST service
 
 `Resource` is a `Struct` type with the following fields:
 
-| Name         | Type                                            | Options    | Description                                                                                    | Notes |
-|--------------|-------------------------------------------------|------------|------------------------------------------------------------------------------------------------|-------|
-| type         | String                                          |            | The type of the resource                                                                       |       |
-| method       | String                                          |            | The method for the action (typically GET, POST, etc for HTTP access)                           |       |
-| path         | String                                          |            | The resource path template                                                                     |       |
-| comment      | String                                          | optional   | The optional comment                                                                           |       |
-| inputs       | Array&lt;[ResourceInput](#resourceinput)&gt;    | optional   | An Array named inputs                                                                          |       |
-| outputs      | Array&lt;[ResourceOutput](#resourceoutput)&gt;  | optional   | An Array of named outputs                                                                      |       |
-| auth         | [ResourceAuth](#resourceauth)                   | optional   | The optional authentication or authorization directive                                         |       |
-| expected     | String                                          | default=OK | The expected symbolic response code                                                            |       |
-| alternatives | Array&lt;String&gt;                             | optional   | The set of alternative but non-error response codes                                            |       |
-| exceptions   | Map&lt;String,[ExceptionDef](#exceptiondef)&gt; | optional   | A map of symbolic response code to Exception definitions                                       |       |
-| async        | Bool                                            | optional   | A hint to server implementations that this resource would be better implemented with async I/O |       |
-
-
-### TableIndex
-
-TableIndex defines indices on a table
-
-`TableIndex` is a `Struct` type with the following fields:
-
-| Name    | Type                | Options       | Description                                                                 | Notes |
-|---------|---------------------|---------------|-----------------------------------------------------------------------------|-------|
-| fields  | Array&lt;String&gt; |               | The fields to index. Each field must be present in the table's record type. |       |
-| ordered | Bool                | default=false | if present and true, the index is ordered                                   |       |
-
-
-### Table
-
-A DatabaseTable describes a single table and multiple indexes on it
-
-`Table` is a `Struct` type with the following fields:
-
-| Name    | Type                                   | Options       | Description                                           | Notes |
-|---------|----------------------------------------|---------------|-------------------------------------------------------|-------|
-| name    | String                                 |               | The name of the table                                 |       |
-| records | String                                 |               | The name of the type of each record                   |       |
-| key     | Array&lt;String&gt;                    |               | The field(s) in the records that form the primary key |       |
-| ordered | Bool                                   | default=false | An indication of whether the table is ordered or not  |       |
-| indexes | Array&lt;[TableIndex](#tableindex)&gt; | optional      | Additional indexes for the table                      |       |
-
-
-### NamespacedIdentifier
-
-A Namespace is a dotted compound name, using reverse domain name order (i.e.
-"com.yahoo.auth")
-
-`NamespacedIdentifier` is a `String` type with the following options:
-
-| Option  | Value                                                    | Notes |
-|---------|----------------------------------------------------------|-------|
-| pattern | `"([a-zA-Z_]+[a-zA-Z_0-9]*)(\.[a-zA-Z_]+[a-zA-Z_0-9])*`" |       |
+| Name         | Type                                                        | Options    | Description                                                                                    | Notes |
+|--------------|-------------------------------------------------------------|------------|------------------------------------------------------------------------------------------------|-------|
+| type         | [TypeRef](#typeref)                                         |            | The type of the resource                                                                       |       |
+| method       | String                                                      |            | The method for the action (typically GET, POST, etc for HTTP access)                           |       |
+| path         | String                                                      |            | The resource path template                                                                     |       |
+| comment      | String                                                      | optional   | The optional comment                                                                           |       |
+| inputs       | Array&lt;[ResourceInput](#resourceinput)&gt;                | optional   | An Array named inputs                                                                          |       |
+| outputs      | Array&lt;[ResourceOutput](#resourceoutput)&gt;              | optional   | An Array of named outputs                                                                      |       |
+| auth         | [ResourceAuth](#resourceauth)                               | optional   | The optional authentication or authorization directive                                         |       |
+| expected     | String                                                      | default=OK | The expected symbolic response code                                                            |       |
+| alternatives | Array&lt;String&gt;                                         | optional   | The set of alternative but non-error response codes                                            |       |
+| exceptions   | Map&lt;String,[ExceptionDef](#exceptiondef)&gt;             | optional   | A map of symbolic response code to Exception definitions                                       |       |
+| async        | Bool                                                        | optional   | A hint to server implementations that this resource would be better implemented with async I/O |       |
+| annotations  | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional   | additional annotations starting with "x_"                                                      |       |
 
 
 ### Schema
 
-A Schema is a container for types, resources, and tables. It is self-contained
-(no external references). and is the output of the RDL parser.
+A Schema is a container for types and resources. It is self-contained (no
+external references). and is the output of the RDL parser.
 
 `Schema` is a `Struct` type with the following fields:
 
-| Name      | Type                                          | Options  | Description                                             | Notes |
-|-----------|-----------------------------------------------|----------|---------------------------------------------------------|-------|
-| namespace | [NamespacedIdentifier](#namespacedidentifier) | optional | The namespace for the schema                            |       |
-| name      | [Identifier](#identifier)                     | optional | The name of the schema                                  |       |
-| version   | Int32                                         | optional | The version of the schema                               |       |
-| comment   | String                                        | optional | The comment for the entire schema                       |       |
-| types     | Array&lt;[Type](#type)&gt;                    | optional | The types this schema defines.                          |       |
-| resources | Array&lt;[Resource](#resource)&gt;            | optional | The resources for a service this schema defines         |       |
-| tables    | Array&lt;[Table](#table)&gt;                  | optional | The tables/indexes for a database this schema describes |       |
+| Name      | Type                                          | Options  | Description                                     | Notes |
+|-----------|-----------------------------------------------|----------|-------------------------------------------------|-------|
+| namespace | [NamespacedIdentifier](#namespacedidentifier) | optional | The namespace for the schema                    |       |
+| name      | [Identifier](#identifier)                     | optional | The name of the schema                          |       |
+| version   | Int32                                         | optional | The version of the schema                       |       |
+| comment   | String                                        | optional | The comment for the entire schema               |       |
+| types     | Array&lt;[Type](#type)&gt;                    | optional | The types this schema defines.                  |       |
+| resources | Array&lt;[Resource](#resource)&gt;            | optional | The resources for a service this schema defines |       |
 
