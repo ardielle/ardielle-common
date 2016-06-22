@@ -3,7 +3,7 @@
 ## Overview
 
 TBin is a simple binary serialization schema that supports all the types in
-[RDL](http://yo/rdl). All values get tagged
+[RDL](https://ardielle.github.io). All values get tagged
 with a type. Struct field names get interned to prevent repetition of the strings.
 Some tiny values are specially encoded to further pack the data.
 If a schema is provided, or can be derived from an implementation langauges type reflection
@@ -66,11 +66,11 @@ bytes have the top bit set as a continuation marker. For example:
 | 16384 | 11 10 01 |
 
 Signed integers are encoded with a zig-zag encoding format that maps signed integers to unsigned integers so that numbers
-with a small absolute value (for instance, -1) have a small varint encoded value too:
+with a small absolute value (for instance, -1) also have a small varint encoded value:
 
     u = (n << 1) ^ (n >> 31)
 
-Examples:
+For example:
 
 | Signed Int | ZigZag value |
 |--------|---------|
@@ -213,7 +213,7 @@ the key type in a map is specified, but the value is not.
 Note that languages with type reflection abilities can usually generate such a schema on the fly from the
 language types. This is a fairly common case.
 
-Suppose you had the follow TDL schema for the above data:
+Suppose you had the follow RDL schema for the above data:
 
 	type Point Struct {
 	    Int32 x;
@@ -237,7 +237,7 @@ Then, the same data as above can be encoded like this:
 		// “points” if type 0x41 (Array<Point>)
 	//now the data follows
 	42 //polyline
-		03 		//13 items in the points array
+		03 		//3 items in the points array
 		02 16	//1, 11 the data for x and y)
 		04 2c	//2, 22
 		06 42   //3, 33
