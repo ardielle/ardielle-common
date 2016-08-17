@@ -719,6 +719,26 @@
                         "comment": "additional annotations starting with \"x_\"",
                         "items": "String",
                         "keys": "ExtendedAnnotation"
+                    },
+                    {
+                        "name": "consumes",
+                        "type": "Array",
+                        "optional": true,
+                        "comment": "Optional hint for resource acceptable input types",
+                        "items": "String"
+                    },
+                    {
+                        "name": "produces",
+                        "type": "Array",
+                        "optional": true,
+                        "comment": "Optional hint for resource output content types",
+                        "items": "String"
+                    },
+                    {
+                        "name": "name",
+                        "type": "Identifier",
+                        "optional": true,
+                        "comment": "The optional name of the resource"
                     }
                 ]
             }

@@ -407,6 +407,9 @@ A Resource of a REST service
 | exceptions   | Map&lt;String,[ExceptionDef](#exceptiondef)&gt;             | optional   | A map of symbolic response code to Exception definitions                                       |       |
 | async        | Bool                                                        | optional   | A hint to server implementations that this resource would be better implemented with async I/O |       |
 | annotations  | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional   | additional annotations starting with "x_"                                                      |       |
+| consumes     | Array&lt;String&gt;                                         | optional   | Optional hint for resource acceptable input types                                              |       |
+| produces     | Array&lt;String&gt;                                         | optional   | Optional hint for resource output content types                                                |       |
+| name         | [Identifier](#identifier)                                   | optional   | The optional name of the resource                                                              |       |
 
 
 ### Schema
