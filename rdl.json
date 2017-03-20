@@ -786,6 +786,12 @@
                         "optional": true,
                         "comment": "The resources for a service this schema defines",
                         "items": "Resource"
+                    },
+                    {
+                        "name": "base",
+                        "type": "String",
+                        "optional": true,
+                        "comment": "the base path for resources in the schema."
                     }
                 ]
             }

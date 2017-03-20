@@ -255,4 +255,5 @@ type Schema Struct {
     String comment (optional); // The comment for the entire schema
     Array<Type> types (optional); // The types this schema defines.
     Array<Resource> resources (optional); // The resources for a service this schema defines
+    String base (optional); //the base path for resources in the schema.
 }
