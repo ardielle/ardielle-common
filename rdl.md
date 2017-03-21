@@ -427,4 +427,5 @@ external references). and is the output of the RDL parser.
 | comment   | String                                        | optional | The comment for the entire schema               |       |
 | types     | Array&lt;[Type](#type)&gt;                    | optional | The types this schema defines.                  |       |
 | resources | Array&lt;[Resource](#resource)&gt;            | optional | The resources for a service this schema defines |       |
+| base      | String                                        | optional | the base path for resources in the schema.      |       |
 
