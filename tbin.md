@@ -58,12 +58,12 @@ bytes have the top bit set as a continuation marker. For example:
 |--------|---------|
 | 0 | 00 |
 | 127 | 7f |
-| 128 | 11 00 |
-| 129 | 11 01 |
-| 255 | 11 7f |
-| 256 | 12 7f |
+| 128 | 81 00 |
+| 129 | 81 01 |
+| 255 | 81 7f |
+| 256 | 82 00 |
 | 16383 | ff 7f |
-| 16384 | 11 10 01 |
+| 16384 | 81 10 00 |
 
 Signed integers are encoded with a zig-zag encoding format that maps signed integers to unsigned integers so that numbers
 with a small absolute value (for instance, -1) also have a small varint encoded value:
@@ -98,11 +98,10 @@ The 4 integer types are encoded with a tag for the type, followed by a signed zi
     INT32_TAG <n>
     INT64_TAG <n>
 
-Floating point numbers are encoded as fixed size quantities, with the bits corresponding to the IEEE spec:
+Floating point numbers are encoded as fixed size quantities, with the bits corresponding to the IEEE-754 spec, and encoded in network order:
 
     FLOAT32_TAG <4 bytes>
     FLOAT64_TAG <8 bytes>
-
 
 ### Strings and Bytes Encoding
 
@@ -110,15 +109,15 @@ Bytes are encoded as an unsigned varint length, followed by that many bytes:
 
     BYTES_TAG <length> <bytes...>
 
-Similarly, strings are encoded as an unsigned varint length, followed by that many UTF8 bytes.
+Similarly, strings are encoded as an unsigned varint length (in bytes, not chars / codepoints), followed by that many UTF8 bytes.
 
     STRING_TAG <length> <utf8bytes...>
 	"test" -> 09 04 74 65 73 74
 	
-If the string is small enough (< 32 bytes), then it is encoded with a special TINY_STR_TAG, which
+If the string is small enough when UTF8-encoded (< 32 bytes), then it is encoded with a special TINY_STR_TAG, which
 has the length embedded in 5 bits of the tag:
 
-    (TINY_STR_TAG | strlen(s)) <utf8bytes>
+    (TINY_STR_TAG | strlen(utf8_encode(s)) <utf8bytes...>
     "test" -> 24 74 65 73 74
 
 ### Array and Map Encoding
@@ -133,15 +132,16 @@ they should be part of a user-defined type, described later.
 Maps are encoded similarly, except the length is the number of key/value mappings, each of which
 is expressed as a value:
 
-    MAP_TAG <length> <key> <value>*
+    MAP_TAG <length> (<key> <value>)*
 
-Both keys and values are encoded with its own tag, to get homogenous packed maps, user defined types,
+Both keys and values are encoded each with their own tag; to get homogenous packed maps, user defined types,
 as described later, must be used.
 
-### Struct encoding
+### Struct Encoding
+
 Structs get the number of fields encoded as an unsigned varint, followed by that many key/value pairs.
 
-    STRUCT_TAG <count> (<field_id> [<namelen> <utf8bytes>] <value>)*
+    STRUCT_TAG <count> (<field_id> [<namelen> <utf8bytes...>] <value>)*
 
 Structs are optimized such that the key names are interned as you go. So, repeated structs will tend to have a short
 integer as the key, rather than the string. This is done by encoding a number as the key, and for the first occurrence
@@ -185,10 +185,10 @@ A UUID is encoded as a fixed size 16 byte array:
 
     UUID_TAG <16 bytes>
 
-A Symbol is an interned string, much like field names. The first occurrence of it should
-define its name, subsequent references to it should only include its id:
+A Symbol is an interned string, much like field names. The first occurrence of it must
+define its name, subsequent references to it must only include its id:
 
-    SYMBOL_TAG <symid> [<namelen> <namebytes>]
+    SYMBOL_TAG <symid> [<namelen> <name-utf8-bytes>]
 
 
 ### Schema-informed encoding and User Defined Types
@@ -206,7 +206,7 @@ typedefs, which define new tags in this encoded stream.
 | DEF_UNION_TAG | 0x14 |
 | DEF_ENUM_TAG | 0x15 |
 
-The ANY_TAG is introduced for typedefs, it can be used where a type tag is required, but the decision of
+The ANY_TAG is introduced for typedefs; it can be used where a type tag is required, but the decision of
 type is to be included in the data. This is what happens with RDL `optional` fields in structs, or when
 the key type in a map is specified, but the value is not.
 
@@ -247,7 +247,7 @@ As the repetitions of the data of a given type increases, so do the space saving
 Array typedefs take the item type as a parameter, then the length
 is an argument to the actual occurrence of the new tag.
 
-Struct typedefs define their fields an an ordered set of named fields, each with a type. If the type is an array or map,
+Struct typedefs define their fields as an ordered set of named fields, each with a type. If the type is an array or map,
 then the appropriate item type/key type is included in the same definition. The ANY_TAG may be used if one or the other
 of the key or value type is not to be constrained.
 
@@ -255,11 +255,12 @@ A type definition must be closed for this encoding to be used. Non-closed types 
 
 ### Version Tag
 
-TBin is currently at version 1. TBin streams should always start with a version tag.
+TBin is currently at version 3, with versions 1 and 2 no longer supported and non-representable.
+TBin streams should always start with a version tag.
 
-    VERSION_TAG | (version - 1)
+    VERSION_TAG | (version - 3)
 
-	vN -> "0001 1NNN"   where N is (version - 1)
+	vN -> "0001 1NNN"   where N is (version - 3), and NNN is N encoded as an unsigned 3-bit integer
 	v3 -> "0001 1000"
 	v4 -> "0001 1001"
 
