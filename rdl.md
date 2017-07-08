@@ -263,10 +263,11 @@ EnumElementDef defines one of the elements of an Enum
 
 `EnumElementDef` is a `Struct` type with the following fields:
 
-| Name    | Type                      | Options  | Description                           | Notes |
-|---------|---------------------------|----------|---------------------------------------|-------|
-| symbol  | [Identifier](#identifier) |          | The identifier representing the value |       |
-| comment | String                    | optional | the comment for the element           |       |
+| Name        | Type                                                        | Options  | Description                               | Notes |
+|-------------|-------------------------------------------------------------|----------|-------------------------------------------|-------|
+| symbol      | [Identifier](#identifier)                                   |          | The identifier representing the value     |       |
+| comment     | String                                                      | optional | the comment for the element               |       |
+| annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_" |       |
 
 
 ### EnumTypeDef
