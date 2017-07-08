@@ -420,13 +420,14 @@ external references). and is the output of the RDL parser.
 
 `Schema` is a `Struct` type with the following fields:
 
-| Name      | Type                                          | Options  | Description                                     | Notes |
-|-----------|-----------------------------------------------|----------|-------------------------------------------------|-------|
-| namespace | [NamespacedIdentifier](#namespacedidentifier) | optional | The namespace for the schema                    |       |
-| name      | [Identifier](#identifier)                     | optional | The name of the schema                          |       |
-| version   | Int32                                         | optional | The version of the schema                       |       |
-| comment   | String                                        | optional | The comment for the entire schema               |       |
-| types     | Array&lt;[Type](#type)&gt;                    | optional | The types this schema defines.                  |       |
-| resources | Array&lt;[Resource](#resource)&gt;            | optional | The resources for a service this schema defines |       |
-| base      | String                                        | optional | the base path for resources in the schema.      |       |
+| Name        | Type                                                        | Options  | Description                                     | Notes |
+|-------------|-------------------------------------------------------------|----------|-------------------------------------------------|-------|
+| namespace   | [NamespacedIdentifier](#namespacedidentifier)               | optional | The namespace for the schema                    |       |
+| name        | [Identifier](#identifier)                                   | optional | The name of the schema                          |       |
+| version     | Int32                                                       | optional | The version of the schema                       |       |
+| comment     | String                                                      | optional | The comment for the entire schema               |       |
+| types       | Array&lt;[Type](#type)&gt;                                  | optional | The types this schema defines.                  |       |
+| resources   | Array&lt;[Resource](#resource)&gt;                          | optional | The resources for a service this schema defines |       |
+| base        | String                                                      | optional | the base path for resources in the schema.      |       |
+| annotations | Map&lt;[ExtendedAnnotation](#extendedannotation),String&gt; | optional | additional annotations starting with "x_"       |       |
 
